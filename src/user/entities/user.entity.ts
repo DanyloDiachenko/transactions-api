@@ -1,5 +1,5 @@
-import { Category } from "src/category/entities/category.entity";
-import { Transaction } from "src/transaction/entities/transaction.entity";
+import { Category } from "../../category/entities/category.entity";
+import { Transaction } from "../../transaction/entities/transaction.entity";
 import {
     Column,
     CreateDateColumn,
