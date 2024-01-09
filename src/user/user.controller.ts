@@ -19,9 +19,4 @@ export class UserController {
     async create(@Body() createUserDto: CreateUserDto) {
         return await this.userService.create(createUserDto);
     }
-
-    @Get(":id")
-    findOne(@Param("id") id: string) {
-        return this.userService.findOne(id);
-    }
 }
