@@ -8,29 +8,37 @@ import { JwtService } from "@nestjs/jwt";
 
 @Injectable()
 export class UserService {
-    constructor(
-        @InjectRepository(User)
-        private readonly userRepository: Repository<User>,
-        private readonly jwtService: JwtService,
-    ) {}
+	constructor(
+		@InjectRepository(User)
+		private readonly userRepository: Repository<User>,
+		private readonly jwtService: JwtService,
+	) {}
 
-    async create(createUserDto: CreateUserDto) {
-        const existingUser = await this.userRepository.findOne({
-            where: {
-                email: createUserDto.email,
-            },
-        });
+	async create(createUserDto: CreateUserDto) {
+		const existingUser = await this.userRepository.findOne({
+			where: {
+				email: createUserDto.email,
+			},
+		});
 
-        if (existingUser)
-            throw new BadRequestException("This email already exist");
+		if (existingUser)
+			throw new BadRequestException("This email already exist");
 
-        const createdUser = await this.userRepository.save({
-            email: createUserDto.email,
-            password: await argon2.hash(createUserDto.password),
-        });
+		const createdUser = await this.userRepository.save({
+			email: createUserDto.email,
+			password: await argon2.hash(createUserDto.password),
+		});
 
-        const token = this.jwtService.sign({ email: createUserDto.email });
+		const token = this.jwtService.sign({ email: createUserDto.email });
 
-        return { createdUser, token };
-    }
+		return { createdUser, token };
+	}
+
+	async findOne(email: string) {
+		return await this.userRepository.findOne({
+			where: {
+				email,
+			},
+		});
+	}
 }

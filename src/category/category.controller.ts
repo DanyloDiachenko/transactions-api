@@ -1,34 +1,54 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { CategoryService } from './category.service';
-import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
+import {
+    Controller,
+    Get,
+    Post,
+    Body,
+    Patch,
+    Param,
+    Delete,
+    Req,
+    UseGuards,
+    UsePipes,
+    ValidationPipe,
+} from "@nestjs/common";
+import { CategoryService } from "./category.service";
+import { CreateCategoryDto } from "./dto/create-category.dto";
+import { UpdateCategoryDto } from "./dto/update-category.dto";
+import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
 
-@Controller('category')
+@Controller("category")
 export class CategoryController {
-  constructor(private readonly categoryService: CategoryService) {}
+	constructor(private readonly categoryService: CategoryService) {}
 
-  @Post()
-  create(@Body() createCategoryDto: CreateCategoryDto) {
-    return this.categoryService.create(createCategoryDto);
-  }
+	@Post()
+	@UseGuards(JwtAuthGuard)
+	@UsePipes(new ValidationPipe())
+	create(@Body() createCategoryDto: CreateCategoryDto, @Req() req) {
+		return this.categoryService.create(createCategoryDto, +req.user.id);
+	}
 
-  @Get()
-  findAll() {
-    return this.categoryService.findAll();
-  }
+	@Get()
+	findAll(@Req() req) {
+		return this.categoryService.findAll(req.user.id);
+	}
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.categoryService.findOne(+id);
-  }
+	@Get(":id")
+	findOne(@Param("id") id: number) {
+		return this.categoryService.findOne(+id);
+	}
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto) {
-    return this.categoryService.update(+id, updateCategoryDto);
-  }
+	@Patch(":id")
+	@UseGuards(JwtAuthGuard)
+	update(
+		@Param("id") id: string,
+		@Body() updateCategoryDto: UpdateCategoryDto,
+	) {
+		return this.categoryService.update(+id, updateCategoryDto);
+	}
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.categoryService.remove(+id);
-  }
+	@Delete(":id")
+	@UseGuards(JwtAuthGuard)
+	remove(@Param("id") id: number) {
+		return this.categoryService.remove(+id);
+	}
 }
