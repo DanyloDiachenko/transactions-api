@@ -18,7 +18,8 @@ export class CategoryService {
 
 	async create(createCategoryDto: CreateCategoryDto, id: number) {
 		const isExists = await this.categoryRepository.findBy({
-			user: { id: id },
+			user: { id },
+			title: createCategoryDto.title,
 		});
 
 		if (isExists.length) {

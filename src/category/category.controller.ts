@@ -17,18 +17,19 @@ import { UpdateCategoryDto } from "./dto/update-category.dto";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
 import { AuthorGuard } from "src/guards/author.guard";
 
-@Controller("category")
+@Controller("categories")
 export class CategoryController {
 	constructor(private readonly categoryService: CategoryService) {}
 
-	@Post()
+	@Post("")
 	@UseGuards(JwtAuthGuard)
 	@UsePipes(new ValidationPipe())
 	create(@Body() createCategoryDto: CreateCategoryDto, @Req() req) {
 		return this.categoryService.create(createCategoryDto, +req.user.id);
 	}
 
-	@Get()
+	@Get("")
+	@UseGuards(JwtAuthGuard)
 	findAll(@Req() req) {
 		return this.categoryService.findAll(req.user.id);
 	}
