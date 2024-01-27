@@ -5,41 +5,32 @@ import { AuthModule } from "./auth/auth.module";
 import { TransactionModule } from "./transaction/transaction.module";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { parse } from "pg-connection-string";
 
 @Module({
-	imports: [
-		ConfigModule.forRoot({
-			isGlobal: true,
-		}),
-		TypeOrmModule.forRootAsync({
-			imports: [ConfigModule],
-			useFactory: async (configService: ConfigService) => {
-				const databaseUrl = configService.get("DATABASE_URL");
-				const connectionOptions = parse(databaseUrl);
-
-				return {
-					type: "postgres", // Assuming you are using Postgres
-					host: connectionOptions.host,
-					port: parseInt(connectionOptions.port),
-					username: connectionOptions.user,
-					password: connectionOptions.password,
-					database: connectionOptions.database,
-					ssl: connectionOptions.ssl
-						? { rejectUnauthorized: false }
-						: false, // Adjust SSL based on your DB's requirement
-					synchronize: true, // Be careful with this in production
-					autoLoadEntities: true,
-				};
-			},
-			inject: [ConfigService],
-		}),
-		UserModule,
-		CategoryModule,
-		AuthModule,
-		TransactionModule,
-	],
-	controllers: [],
-	providers: [],
+    imports: [
+        ConfigModule.forRoot({
+            isGlobal: true,
+        }),
+        TypeOrmModule.forRootAsync({
+            imports: [ConfigModule],
+            useFactory: (configService: ConfigService) => ({
+                type: "postgres",
+                host: configService.get("DB_HOST"),
+                port: configService.get<number>("DB_PORT"),
+                username: configService.get("DB_USERNAME"),
+                password: configService.get("DB_PASSWORD"),
+                database: configService.get("DB_NAME"),
+                synchronize: true,
+                autoLoadEntities: true,
+            }),
+            inject: [ConfigService],
+        }),
+        UserModule,
+        CategoryModule,
+        AuthModule,
+        TransactionModule,
+    ],
+    controllers: [],
+    providers: [],
 })
 export class AppModule {}
