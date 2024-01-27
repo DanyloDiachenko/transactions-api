@@ -15,8 +15,8 @@ import {
 import { TransactionService } from "./transaction.service";
 import { CreateTransactionDto } from "./dto/create-transaction.dto";
 import { UpdateTransactionDto } from "./dto/update-transaction.dto";
-import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
-import { AuthorGuard } from "src/guards/author.guard";
+import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
+import { AuthorGuard } from "../guards/author.guard";
 
 @Controller("transactions")
 export class TransactionController {
