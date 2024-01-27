@@ -39,6 +39,9 @@ export class TransactionService {
 					id,
 				},
 			},
+			relations: {
+				category: true,
+			},
 			order: {
 				createdAt: "DESC",
 			},
