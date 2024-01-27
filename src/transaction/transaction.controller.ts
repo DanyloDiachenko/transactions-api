@@ -28,7 +28,7 @@ export class TransactionController {
 	create(@Body() createTransactionDto: CreateTransactionDto, @Req() req) {
 		return this.transactionService.create(
 			createTransactionDto,
-			req.user.id,
+			+req.user.id,
 		);
 	}
 
