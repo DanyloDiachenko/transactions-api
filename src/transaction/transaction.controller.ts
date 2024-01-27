@@ -18,11 +18,11 @@ import { UpdateTransactionDto } from "./dto/update-transaction.dto";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
 import { AuthorGuard } from "src/guards/author.guard";
 
-@Controller("transaction")
+@Controller("transactions")
 export class TransactionController {
 	constructor(private readonly transactionService: TransactionService) {}
 
-	@Post()
+	@Post("")
 	@UsePipes(new ValidationPipe())
 	@UseGuards(JwtAuthGuard)
 	create(@Body() createTransactionDto: CreateTransactionDto, @Req() req) {
